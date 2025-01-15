@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "react": "18.3.1",
-    "react-native": "0.76.6"
+    "react-native": "0.76.6",
+    "react-native-paper": "^5.13.1",
+    "react-native-safe-area-context": "^5.1.0",
+    "sharetribe-flex-sdk": "^1.21.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

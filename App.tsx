@@ -6,113 +6,132 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
+
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
+import { Button, TextInput } from 'react-native-paper';
+import { useState } from 'react';
+import sdk from './sdk';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const [fname, setFname] = useState('');
+  const [lname, setLname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handelSingup=async()=>{
+    try {
+      const response = await sdk.currentUser.create({
+        email:email,
+  password: password,
+  firstName: fname,
+  lastName: lname,
+      });
+      console.log(`User created successfully! User ID: ${response.data}`);
+    } catch (error) {
+     console.log(error);
+    }
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.head}>
+        <Text style={styles.title}>Market</Text>
+        <Text style={styles.title2}>Place!</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.sign}>Singup</Text>
+        <TextInput
+          mode='outlined'
+          placeholder='First Name'
+          value={fname}
+          onChangeText={(text)=>setFname(text)}
+          style={{ marginTop: 60, borderRadius: 20 }}
+          theme={{ roundness: 20 }}
+        />
+        <TextInput
+          mode='outlined'
+          placeholder='Last Name'
+          value={lname}
+          onChangeText={(text)=>setLname(text)}
+          style={{ marginTop: 15, borderRadius: 20 }}
+          theme={{ roundness: 20 }}
+
+        />
+        <TextInput
+          mode='outlined'
+          placeholder='Email'
+          value={email}
+          onChangeText={(text)=>{setEmail(text)}}
+          style={{ marginTop: 15, borderRadius: 20 }}
+          theme={{ roundness: 20 }}
+        />
+        <TextInput
+          mode='outlined'
+          placeholder='Password'
+          value={password}
+          onChangeText={(text)=>{setPassword(text)}}
+          style={{ marginTop: 15, borderRadius: 20 }}
+          theme={{ roundness: 20 }}
+        />
+        <Button mode='contained' style={styles.btn} onPress={handelSingup}>
+          Singup
+        </Button>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  head: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: 10,
+    alignSelf: 'center',
+    marginTop: 100
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
+  title: {
+    fontSize: 25,
     fontWeight: '700',
+    fontStyle: 'italic'
   },
-});
+  title2: {
+    fontSize: 25,
+    fontWeight: '700',
+    color: 'blue'
+  },
+  body: {
+    flex: 5,
+    backgroundColor: '#2467B3',
+    borderTopLeftRadius: 60,
+    borderTopRightRadius: 60,
+    padding: 15
+  },
+  sign: {
+    alignSelf: 'center',
+    fontSize: 25,
+    color: '#fff',
+    fontWeight: 900
+  },
+  btn: {
+    marginTop: 20,
+    backgroundColor: 'green',
+    width: '50%',
+    alignSelf: 'center',
+  }
+})
+
 
 export default App;
